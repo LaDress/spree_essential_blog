@@ -4,7 +4,7 @@ class Spree::Blogs::PostsController < Spree::BaseController
 
   helper "spree/products"
 
-  before_filter :get_sidebar, :only => [:index, :search, :show]
+  before_filter :get_sidebar, only: [:index, :search, :show]
 
   def index
     @posts_by_month = default_scope.limit(50).group_by { |post| post.posted_at.strftime("%B %Y") }
@@ -33,19 +33,19 @@ class Spree::Blogs::PostsController < Spree::BaseController
   end
 
   def search
-		query = params[:query].gsub(/%46/, '.')
-		@posts = default_scope.tagged_with(query).page(params[:page]).per(Spree::Post.per_page)
-		get_tags
-		render :template => 'spree/blogs/posts/index'
-	end
+    query = params[:query].gsub(/%46/, '.')
+    @posts = default_scope.tagged_with(query).page(params[:page]).per(Spree::Post.per_page)
+    get_tags
+    render template: 'spree/blogs/posts/index'
+  end
 
   def show
     @post = default_scope.includes(:tags, :images, :products).find_by_path(params[:id]) rescue nil
     return redirect_to archive_posts_path unless @post
   end
 
-	def archive
-		@posts = default_scope.all
+  def archive
+    @posts = default_scope.all
   end
 
 end
